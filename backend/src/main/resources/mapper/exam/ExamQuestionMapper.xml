@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.exam.mapper.ExamQuestionMapper">
+    <resultMap id="EQMap" type="com.company.training.modules.exam.entity.ExamQuestion">
+        <id property="id" column="id"/><result property="examId" column="exam_id"/><result property="questionId" column="question_id"/><result property="score" column="score"/><result property="sort" column="sort"/><result property="deleted" column="deleted"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.company.training.modules.exam.entity.ExamQuestion" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO exam_question(exam_id,question_id,score,sort,deleted) VALUES(#{examId},#{questionId},#{score},#{sort},0)
+    </insert>
+    <update id="deleteByExamId">UPDATE exam_question SET deleted=1 WHERE exam_id=#{examId} AND deleted=0</update>
+    <select id="selectByExamId" resultMap="EQMap">SELECT * FROM exam_question WHERE exam_id=#{examId} AND deleted=0 ORDER BY sort ASC</select>
+</mapper>

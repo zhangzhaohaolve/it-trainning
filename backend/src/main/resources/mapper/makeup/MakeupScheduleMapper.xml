@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.makeup.mapper.MakeupScheduleMapper">
+    <resultMap id="SMap" type="com.company.training.modules.makeup.entity.MakeupSchedule">
+        <id property="id" column="id"/><result property="makeupId" column="makeup_id"/><result property="makeupTime" column="makeup_time"/><result property="location" column="location"/><result property="createTime" column="create_time"/><result property="deleted" column="deleted"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.company.training.modules.makeup.entity.MakeupSchedule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO makeup_schedule(makeup_id,makeup_time,location,create_time,deleted) VALUES(#{makeupId},#{makeupTime},#{location},NOW(),0)
+    </insert>
+    <update id="updateById" parameterType="com.company.training.modules.makeup.entity.MakeupSchedule">
+        UPDATE makeup_schedule SET makeup_time=#{makeupTime},location=#{location} WHERE id=#{id} AND deleted=0
+    </update>
+    <select id="selectAll" resultMap="SMap">SELECT * FROM makeup_schedule WHERE deleted=0 ORDER BY makeup_time ASC</select>
+    <select id="selectByMakeupId" resultMap="SMap">SELECT * FROM makeup_schedule WHERE makeup_id=#{makeupId} AND deleted=0 LIMIT 1</select>
+</mapper>
