@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.trainingplan.mapper.TrainingNoticeMapper">
+    <resultMap id="NoticeResultMap" type="com.company.training.modules.trainingplan.entity.TrainingNotice">
+        <id property="id" column="id"/>
+        <result property="planId" column="plan_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="status" column="status"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.company.training.modules.trainingplan.entity.TrainingNotice" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO training_notice(plan_id, user_id, type, content, send_time, status, deleted)
+        VALUES (#{planId}, #{userId}, #{type}, #{content}, NOW(), #{status}, 0)
+    </insert>
+
+    <select id="selectList" resultMap="NoticeResultMap">
+        SELECT id,plan_id,user_id,type,content,send_time,status,deleted
+        FROM training_notice
+        WHERE deleted = 0
+        <if test="userId != null">AND user_id = #{userId}</if>
+        <if test="planId != null">AND plan_id = #{planId}</if>
+        ORDER BY id DESC
+    </select>
+
+    <update id="updateReadStatus">
+        UPDATE training_notice SET status = #{status} WHERE id = #{id} AND deleted = 0
+    </update>
+</mapper>

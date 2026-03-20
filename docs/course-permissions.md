@@ -1,0 +1,16 @@
+course:list
+course:add
+course:update
+course:delete
+course:detail
+courseCategory:list
+courseCategory:add
+courseCategory:update
+courseCategory:delete
+courseMaterial:list
+courseMaterial:upload
+courseMaterial:delete
+lecturer:list
+lecturer:add
+lecturer:update
+lecturer:delete

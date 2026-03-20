@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.exam.mapper.ExamMapper">
+    <resultMap id="EMap" type="com.company.training.modules.exam.entity.Exam">
+        <id property="id" column="id"/><result property="courseId" column="course_id"/><result property="title" column="title"/>
+        <result property="duration" column="duration"/><result property="totalScore" column="total_score"/><result property="passScore" column="pass_score"/>
+        <result property="startTime" column="start_time"/><result property="endTime" column="end_time"/><result property="status" column="status"/><result property="createTime" column="create_time"/><result property="updateTime" column="update_time"/><result property="deleted" column="deleted"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.company.training.modules.exam.entity.Exam" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO exam(course_id,title,duration,total_score,pass_score,start_time,end_time,status,create_time,update_time,deleted)
+        VALUES(#{courseId},#{title},#{duration},#{totalScore},#{passScore},#{startTime},#{endTime},#{status},NOW(),NOW(),0)
+    </insert>
+    <update id="updateById" parameterType="com.company.training.modules.exam.entity.Exam">
+        UPDATE exam SET course_id=#{courseId},title=#{title},duration=#{duration},total_score=#{totalScore},pass_score=#{passScore},start_time=#{startTime},end_time=#{endTime},status=#{status},update_time=NOW()
+        WHERE id=#{id} AND deleted=0
+    </update>
+    <update id="logicDeleteById">UPDATE exam SET deleted=1,update_time=NOW() WHERE id=#{id} AND deleted=0</update>
+    <select id="selectById" resultMap="EMap">SELECT * FROM exam WHERE id=#{id} AND deleted=0</select>
+    <select id="selectPage" resultMap="EMap">SELECT * FROM exam WHERE deleted=0 <if test="courseId!=null">AND course_id=#{courseId}</if><if test="status!=null">AND status=#{status}</if> ORDER BY id DESC LIMIT #{offset()},#{pageSize}</select>
+    <select id="countPage" resultType="java.lang.Long">SELECT COUNT(1) FROM exam WHERE deleted=0 <if test="courseId!=null">AND course_id=#{courseId}</if><if test="status!=null">AND status=#{status}</if></select>
+    <update id="publish">UPDATE exam SET status=1,update_time=NOW() WHERE id=#{id} AND deleted=0</update>
+</mapper>
