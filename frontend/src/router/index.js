@@ -51,6 +51,21 @@ const routes = [
       { path: '/exam/score', name: 'ExamScore', component: () => import('@/views/exam/score.vue'), meta: { title: '成绩管理', roles: ['score:list'] } }
     ]
   }
+,
+  {
+    path: '/makeup',
+    name: 'MakeupRoot',
+    redirect: '/makeup/exam',
+    meta: { title: '补考管理', roles: ['admin', 'teacher'] },
+    children: [
+      { path: '/makeup/exam', name: 'MakeupExam', component: () => import('@/views/makeup/exam.vue'), meta: { title: '补考任务', roles: ['makeupExam:list'] } },
+      { path: '/makeup/schedule', name: 'MakeupSchedule', component: () => import('@/views/makeup/schedule.vue'), meta: { title: '补考安排', roles: ['makeupSchedule:update'] } },
+      { path: '/makeup/score', name: 'MakeupScore', component: () => import('@/views/makeup/score.vue'), meta: { title: '补考成绩', roles: ['makeupScore:list'] } }
+    ]
+  }
+];
+
+export default createRouter({ history: createWebHistory(), routes });
 ];
 
 export default createRouter({ history: createWebHistory(), routes });
