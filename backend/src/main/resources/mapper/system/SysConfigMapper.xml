@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.system.mapper.SysConfigMapper">
+<insert id="insert" parameterType="com.company.training.modules.system.entity.SysConfig" useGeneratedKeys="true" keyProperty="id">INSERT INTO sys_config(config_key,config_value,remark,update_time) VALUES(#{configKey},#{configValue},#{remark},NOW())</insert>
+<update id="updateById" parameterType="com.company.training.modules.system.entity.SysConfig">UPDATE sys_config SET config_key=#{configKey},config_value=#{configValue},remark=#{remark},update_time=NOW() WHERE id=#{id}</update>
+<select id="selectList" resultType="com.company.training.modules.system.entity.SysConfig">SELECT * FROM sys_config ORDER BY id DESC</select>
+<select id="selectByKey" resultType="com.company.training.modules.system.entity.SysConfig">SELECT * FROM sys_config WHERE config_key=#{configKey} LIMIT 1</select>
+</mapper>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.system.mapper.LoginLogMapper">
+<insert id="insert" parameterType="com.company.training.modules.system.entity.LoginLog">INSERT INTO login_log(user_id,ip,login_time,status) VALUES(#{userId},#{ip},NOW(),#{status})</insert>
+<select id="selectList" resultType="com.company.training.modules.system.entity.LoginLog">SELECT * FROM login_log ORDER BY id DESC</select>
+</mapper>

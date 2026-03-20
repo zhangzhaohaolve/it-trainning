@@ -1,0 +1,11 @@
+question:list
+question:add
+question:edit
+question:delete
+exam:list
+exam:publish
+exam:take
+review:list
+review:score
+score:list
+score:export

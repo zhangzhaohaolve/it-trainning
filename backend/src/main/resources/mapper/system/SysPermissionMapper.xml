@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.system.mapper.SysPermissionMapper">
+<resultMap id="PMap" type="com.company.training.modules.system.entity.SysPermission"><id property="id" column="id"/><result property="name" column="name"/><result property="code" column="code"/><result property="type" column="type"/><result property="parentId" column="parent_id"/><result property="path" column="path"/><result property="component" column="component"/><result property="icon" column="icon"/><result property="deleted" column="deleted"/></resultMap>
+<insert id="insert" parameterType="com.company.training.modules.system.entity.SysPermission" useGeneratedKeys="true" keyProperty="id">INSERT INTO sys_permission(name,code,type,parent_id,path,component,icon,deleted) VALUES(#{name},#{code},#{type},#{parentId},#{path},#{component},#{icon},0)</insert>
+<update id="updateById" parameterType="com.company.training.modules.system.entity.SysPermission">UPDATE sys_permission SET name=#{name},code=#{code},type=#{type},parent_id=#{parentId},path=#{path},component=#{component},icon=#{icon} WHERE id=#{id} AND deleted=0</update>
+<update id="logicDelete">UPDATE sys_permission SET deleted=1 WHERE id=#{id} AND deleted=0</update>
+<select id="selectList" resultMap="PMap">SELECT * FROM sys_permission WHERE deleted=0 ORDER BY id ASC</select>
+<select id="selectCodesByUserId" resultType="java.lang.String">SELECT p.code FROM sys_permission p JOIN sys_role_permission rp ON rp.permission_id=p.id JOIN sys_user_role ur ON ur.role_id=rp.role_id WHERE ur.user_id=#{userId} AND p.deleted=0</select>
+</mapper>
