@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.learning.mapper.MyLearningMapper">
+    <select id="selectMyTasks" resultType="com.company.training.modules.learning.dto.MyLearningVO">
+        SELECT tpa.plan_id,
+               c.id AS course_id,
+               c.name AS course_name,
+               IFNULL(lp.progress, 0) AS progress,
+               CASE WHEN IFNULL(lp.progress, 0) = 0 THEN 0
+                    WHEN IFNULL(lp.progress, 0) &lt; 100 THEN 1
+                    ELSE 2 END AS status,
+               tp.end_time AS deadline
+        FROM training_plan_assign tpa
+        JOIN training_plan tp ON tpa.plan_id = tp.id AND tp.deleted = 0
+        JOIN training_plan_course tpc ON tpc.plan_id = tpa.plan_id AND tpc.deleted = 0
+        JOIN course c ON c.id = tpc.course_id AND c.deleted = 0
+        LEFT JOIN learning_progress lp ON lp.user_id = tpa.user_id AND lp.course_id = c.id AND lp.deleted = 0
+        WHERE tpa.deleted = 0
+          AND tpa.user_id = #{userId}
+        <if test="status != null">
+            AND (CASE WHEN IFNULL(lp.progress, 0) = 0 THEN 0
+                      WHEN IFNULL(lp.progress, 0) &lt; 100 THEN 1
+                      ELSE 2 END) = #{status}
+        </if>
+        ORDER BY tp.end_time ASC
+    </select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.learning.mapper.LearningRecordMapper">
+    <resultMap id="RecordMap" type="com.company.training.modules.learning.entity.LearningRecord">
+        <id property="id" column="id"/><result property="userId" column="user_id"/><result property="courseId" column="course_id"/>
+        <result property="duration" column="duration"/><result property="finishTime" column="finish_time"/><result property="createTime" column="create_time"/><result property="deleted" column="deleted"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.company.training.modules.learning.entity.LearningRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO learning_record(user_id,course_id,duration,finish_time,create_time,deleted)
+        VALUES(#{userId},#{courseId},#{duration},#{finishTime},NOW(),0)
+    </insert>
+    <update id="updateById" parameterType="com.company.training.modules.learning.entity.LearningRecord">
+        UPDATE learning_record SET duration=#{duration} WHERE id=#{id} AND deleted=0
+    </update>
+    <update id="logicDeleteById">UPDATE learning_record SET deleted=1 WHERE id=#{id} AND deleted=0</update>
+    <select id="selectPage" resultMap="RecordMap">
+        SELECT lr.* FROM learning_record lr LEFT JOIN user u ON lr.user_id=u.id AND u.deleted=0
+        WHERE lr.deleted=0
+        <if test="deptId != null">AND u.dept_id=#{deptId}</if>
+        <if test="userId != null">AND lr.user_id=#{userId}</if>
+        ORDER BY lr.id DESC LIMIT #{offset()},#{pageSize}
+    </select>
+    <select id="countPage" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM learning_record lr LEFT JOIN user u ON lr.user_id=u.id AND u.deleted=0
+        WHERE lr.deleted=0
+        <if test="deptId != null">AND u.dept_id=#{deptId}</if>
+        <if test="userId != null">AND lr.user_id=#{userId}</if>
+    </select>
+</mapper>

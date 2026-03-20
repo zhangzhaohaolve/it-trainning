@@ -24,6 +24,22 @@ const routes = [
       { path: '/training-plan/notice', name: 'TrainingPlanNotice', component: () => import('@/views/training-plan/notice/index.vue'), meta: { title: '通知推送', roles: ['trainingNotice:list'] } }
     ]
   }
+,
+  {
+    path: '/learning',
+    name: 'LearningRoot',
+    redirect: '/learning/my',
+    meta: { title: '学习管理', roles: ['admin', 'employee'] },
+    children: [
+      { path: '/learning/my', name: 'LearningMy', component: () => import('@/views/learning/my/index.vue'), meta: { title: '我的学习', roles: ['learningMy:list'] } },
+      { path: '/learning/progress', name: 'LearningProgress', component: () => import('@/views/learning/progress/index.vue'), meta: { title: '学习进度', roles: ['learningProgress:list'] } },
+      { path: '/learning/reminder', name: 'LearningReminder', component: () => import('@/views/learning/reminder/index.vue'), meta: { title: '学习提醒', roles: ['learningReminder:list'] } },
+      { path: '/learning/record', name: 'LearningRecord', component: () => import('@/views/learning/record/index.vue'), meta: { title: '学习档案', roles: ['learningRecord:list'] } }
+    ]
+  }
+];
+
+export default createRouter({ history: createWebHistory(), routes });
 ];
 
 export default createRouter({ history: createWebHistory(), routes });
