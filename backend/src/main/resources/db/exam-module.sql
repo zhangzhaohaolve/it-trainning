@@ -1,0 +1,58 @@
+CREATE TABLE IF NOT EXISTS question (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  course_id BIGINT NOT NULL,
+  type TINYINT NOT NULL COMMENT '1单选 2判断 3简答',
+  content TEXT NOT NULL,
+  options JSON NULL,
+  answer TEXT NOT NULL,
+  difficulty TINYINT NOT NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  KEY idx_course_type (course_id, type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='题库';
+
+CREATE TABLE IF NOT EXISTS exam (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  course_id BIGINT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  duration INT NOT NULL,
+  total_score INT NOT NULL,
+  pass_score INT NOT NULL,
+  start_time DATETIME NOT NULL,
+  end_time DATETIME NOT NULL,
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '0未发布 1进行中 2已结束',
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  KEY idx_course_id (course_id),
+  KEY idx_time (start_time,end_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='在线考试';
+
+CREATE TABLE IF NOT EXISTS exam_question (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  exam_id BIGINT NOT NULL,
+  question_id BIGINT NOT NULL,
+  score INT NOT NULL,
+  sort INT NOT NULL,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_exam_question (exam_id, question_id),
+  KEY idx_exam_id (exam_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考试-题目关系';
+
+CREATE TABLE IF NOT EXISTS exam_score (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  exam_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  answers JSON NOT NULL,
+  score INT NOT NULL DEFAULT 0,
+  submit_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '0未判完 1已完成',
+  reviewer BIGINT NULL,
+  review_time DATETIME NULL,
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted TINYINT NOT NULL DEFAULT 0,
+  UNIQUE KEY uk_exam_user (exam_id, user_id),
+  KEY idx_exam_id (exam_id),
+  KEY idx_user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考试成绩';

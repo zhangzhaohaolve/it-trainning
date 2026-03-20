@@ -37,6 +37,23 @@ const routes = [
       { path: '/learning/record', name: 'LearningRecord', component: () => import('@/views/learning/record/index.vue'), meta: { title: '学习档案', roles: ['learningRecord:list'] } }
     ]
   }
+,
+  {
+    path: '/exam',
+    name: 'ExamRoot',
+    redirect: '/exam/question',
+    meta: { title: '在线考试', roles: ['admin', 'teacher', 'student'] },
+    children: [
+      { path: '/exam/question', name: 'ExamQuestion', component: () => import('@/views/exam/question.vue'), meta: { title: '题库管理', roles: ['question:list'] } },
+      { path: '/exam/exam', name: 'ExamManage', component: () => import('@/views/exam/exam.vue'), meta: { title: '考试管理', roles: ['exam:list'] } },
+      { path: '/exam/take', name: 'ExamTake', component: () => import('@/views/exam/take-exam.vue'), meta: { title: '在线考试', roles: ['exam:take'] } },
+      { path: '/exam/review', name: 'ExamReview', component: () => import('@/views/exam/review.vue'), meta: { title: '判卷管理', roles: ['review:list'] } },
+      { path: '/exam/score', name: 'ExamScore', component: () => import('@/views/exam/score.vue'), meta: { title: '成绩管理', roles: ['score:list'] } }
+    ]
+  }
+];
+
+export default createRouter({ history: createWebHistory(), routes });
 ];
 
 export default createRouter({ history: createWebHistory(), routes });
