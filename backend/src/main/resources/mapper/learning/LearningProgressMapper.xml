@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.learning.mapper.LearningProgressMapper">
+    <resultMap id="ProgressMap" type="com.company.training.modules.learning.entity.LearningProgress">
+        <id property="id" column="id"/><result property="userId" column="user_id"/><result property="courseId" column="course_id"/>
+        <result property="progress" column="progress"/><result property="lastLearnTime" column="last_learn_time"/><result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/><result property="deleted" column="deleted"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.company.training.modules.learning.entity.LearningProgress" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO learning_progress(user_id,course_id,progress,last_learn_time,create_time,update_time,deleted)
+        VALUES(#{userId},#{courseId},#{progress},NOW(),NOW(),NOW(),0)
+    </insert>
+    <update id="updateById" parameterType="com.company.training.modules.learning.entity.LearningProgress">
+        UPDATE learning_progress SET progress=#{progress},last_learn_time=NOW(),update_time=NOW() WHERE id=#{id} AND deleted=0
+    </update>
+    <select id="selectById" resultMap="ProgressMap">SELECT * FROM learning_progress WHERE id=#{id} AND deleted=0</select>
+    <update id="logicDeleteById">UPDATE learning_progress SET deleted=1,update_time=NOW() WHERE id=#{id} AND deleted=0</update>
+    <select id="selectPage" resultMap="ProgressMap">
+        SELECT lp.* FROM learning_progress lp LEFT JOIN user u ON lp.user_id=u.id AND u.deleted=0
+        WHERE lp.deleted=0
+        <if test="deptId != null">AND u.dept_id=#{deptId}</if>
+        <if test="userId != null">AND lp.user_id=#{userId}</if>
+        <if test="courseId != null">AND lp.course_id=#{courseId}</if>
+        ORDER BY lp.id DESC LIMIT #{offset()},#{pageSize}
+    </select>
+    <select id="countPage" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM learning_progress lp LEFT JOIN user u ON lp.user_id=u.id AND u.deleted=0
+        WHERE lp.deleted=0
+        <if test="deptId != null">AND u.dept_id=#{deptId}</if>
+        <if test="userId != null">AND lp.user_id=#{userId}</if>
+        <if test="courseId != null">AND lp.course_id=#{courseId}</if>
+    </select>
+    <select id="avgByCourse" resultType="java.lang.Double">SELECT AVG(progress) FROM learning_progress WHERE course_id=#{courseId} AND deleted=0</select>
+    <select id="avgByDept" resultType="java.lang.Double">
+        SELECT AVG(lp.progress) FROM learning_progress lp JOIN user u ON lp.user_id=u.id
+        WHERE u.dept_id=#{deptId} AND lp.deleted=0 AND u.deleted=0
+    </select>
+</mapper>
