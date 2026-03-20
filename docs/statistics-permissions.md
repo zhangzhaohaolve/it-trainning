@@ -1,0 +1,3 @@
+statistics:participate
+statistics:completion
+statistics:passrate

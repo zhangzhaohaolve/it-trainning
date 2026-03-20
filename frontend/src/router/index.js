@@ -63,6 +63,16 @@ const routes = [
       { path: '/makeup/score', name: 'MakeupScore', component: () => import('@/views/makeup/score.vue'), meta: { title: '补考成绩', roles: ['makeupScore:list'] } }
     ]
   }
+,
+  {
+    path: '/statistics/index',
+    name: 'StatisticsIndex',
+    component: () => import('@/views/statistics/index.vue'),
+    meta: { title: '统计分析', roles: ['statistics:participate', 'statistics:completion', 'statistics:passrate'] }
+  }
+];
+
+export default createRouter({ history: createWebHistory(), routes });
 ];
 
 export default createRouter({ history: createWebHistory(), routes });
