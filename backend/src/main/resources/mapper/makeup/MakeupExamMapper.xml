@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.makeup.mapper.MakeupExamMapper">
+    <resultMap id="MMap" type="com.company.training.modules.makeup.entity.MakeupExam">
+        <id property="id" column="id"/><result property="examId" column="exam_id"/><result property="userId" column="user_id"/><result property="reason" column="reason"/><result property="createTime" column="create_time"/><result property="status" column="status"/><result property="deleted" column="deleted"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.company.training.modules.makeup.entity.MakeupExam" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO makeup_exam(exam_id,user_id,reason,create_time,status,deleted) VALUES(#{examId},#{userId},#{reason},NOW(),#{status},0)
+    </insert>
+    <select id="selectPage" resultMap="MMap">
+        SELECT me.* FROM makeup_exam me
+        LEFT JOIN exam e ON me.exam_id=e.id
+        LEFT JOIN user u ON me.user_id=u.id
+        WHERE me.deleted=0
+        <if test="userId!=null">AND me.user_id=#{userId}</if>
+        <if test="courseId!=null">AND e.course_id=#{courseId}</if>
+        <if test="deptId!=null">AND u.dept_id=#{deptId}</if>
+        ORDER BY me.id DESC LIMIT #{offset()},#{pageSize}
+    </select>
+    <select id="countPage" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM makeup_exam me
+        LEFT JOIN exam e ON me.exam_id=e.id
+        LEFT JOIN user u ON me.user_id=u.id
+        WHERE me.deleted=0
+        <if test="userId!=null">AND me.user_id=#{userId}</if>
+        <if test="courseId!=null">AND e.course_id=#{courseId}</if>
+        <if test="deptId!=null">AND u.dept_id=#{deptId}</if>
+    </select>
+    <select id="selectById" resultMap="MMap">SELECT * FROM makeup_exam WHERE id=#{id} AND deleted=0</select>
+    <update id="updateStatus">UPDATE makeup_exam SET status=#{status} WHERE id=#{id} AND deleted=0</update>
+</mapper>

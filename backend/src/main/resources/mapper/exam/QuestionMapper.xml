@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.training.modules.exam.mapper.QuestionMapper">
+    <resultMap id="QMap" type="com.company.training.modules.exam.entity.Question">
+        <id property="id" column="id"/><result property="courseId" column="course_id"/><result property="type" column="type"/><result property="content" column="content"/>
+        <result property="options" column="options"/><result property="answer" column="answer"/><result property="difficulty" column="difficulty"/><result property="createTime" column="create_time"/><result property="updateTime" column="update_time"/><result property="deleted" column="deleted"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.company.training.modules.exam.entity.Question" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO question(course_id,type,content,options,answer,difficulty,create_time,update_time,deleted)
+        VALUES(#{courseId},#{type},#{content},#{options},#{answer},#{difficulty},NOW(),NOW(),0)
+    </insert>
+    <update id="updateById" parameterType="com.company.training.modules.exam.entity.Question">
+        UPDATE question SET course_id=#{courseId},type=#{type},content=#{content},options=#{options},answer=#{answer},difficulty=#{difficulty},update_time=NOW() WHERE id=#{id} AND deleted=0
+    </update>
+    <update id="logicDeleteById">UPDATE question SET deleted=1,update_time=NOW() WHERE id=#{id} AND deleted=0</update>
+    <select id="selectById" resultMap="QMap">SELECT * FROM question WHERE id=#{id} AND deleted=0</select>
+    <select id="selectPage" resultMap="QMap">SELECT * FROM question WHERE deleted=0 <if test="courseId!=null">AND course_id=#{courseId}</if><if test="type!=null">AND type=#{type}</if> ORDER BY id DESC LIMIT #{offset()},#{pageSize}</select>
+    <select id="countPage" resultType="java.lang.Long">SELECT COUNT(1) FROM question WHERE deleted=0 <if test="courseId!=null">AND course_id=#{courseId}</if><if test="type!=null">AND type=#{type}</if></select>
+    <select id="randomByTypeAndDifficulty" resultMap="QMap">
+        SELECT * FROM question WHERE deleted=0 AND course_id=#{courseId} AND type=#{type} AND difficulty &lt;= #{difficulty} ORDER BY RAND() LIMIT #{limit}
+    </select>
+</mapper>
